@@ -57,4 +57,12 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])
         ->name('admin.transaksi.store');
+
+        Route::get('/cek-db', function () {
+    return response()->json([
+        'default' => config('database.default'),
+        'connection' => config('database.connections.' . config('database.default')),
+    ]);
+});
+
 });
