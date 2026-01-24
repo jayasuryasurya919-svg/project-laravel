@@ -6,6 +6,12 @@ use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\JenisKendaraanController;
 use App\Http\Controllers\TransaksiController;
 
+Route::get('/clear', function () {
+    Artisan::call('optimize:clear');
+    return 'cache cleared';
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | ROUTE USER
@@ -57,12 +63,4 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])
         ->name('admin.transaksi.store');
-
-        Route::get('/cek-db', function () {
-    return response()->json([
-        'default' => config('database.default'),
-        'connection' => config('database.connections.' . config('database.default')),
-    ]);
-});
-
 });
