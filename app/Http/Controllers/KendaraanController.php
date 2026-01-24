@@ -17,8 +17,9 @@ class KendaraanController extends Controller
 
     public function create()
     {
-        $jenis = JenisKendaraan::all();
-        return view('admin.kendaraan.create', compact('jenis'));
+        $jenisKendaraans = JenisKendaraan::all();
+
+    return view('admin.kendaraan.create', compact('jenisKendaraans'));
     }
 
     public function store(Request $request)
