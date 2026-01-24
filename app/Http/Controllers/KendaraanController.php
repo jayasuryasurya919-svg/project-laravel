@@ -3,35 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kendaraan;
-use App\Models\JenisKendaraan;
 use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
 {
-    
+    /**
+     * TAMPILKAN DATA
+     */
     public function index()
     {
-        $kendaraans = Kendaraan::with('jenis')->get();
+        $kendaraans = Kendaraan::latest()->get();
         return view('admin.kendaraan.index', compact('kendaraans'));
     }
 
+    /**
+     * FORM TAMBAH
+     */
     public function create()
     {
-        $jenisKendaraans = JenisKendaraan::all();
-
-    return view('admin.kendaraan.create', compact('jenisKendaraans'));
+        return view('admin.kendaraan.create');
     }
 
+    /**
+     * SIMPAN DATA
+     */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nomor_polisi' => 'required',
-            'merk' => 'required',
-            'tahun' => 'required|integer',
-            'harga' => 'required|numeric',
-            'jenis_kendaraan_id' => 'required',
-            'gambar' => 'nullable|image',
+        $request->validate([
+            'nama' => 'required',
+            'harga_sewa' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png'
         ]);
+
+        $data = $request->all();
 
         if ($request->hasFile('gambar')) {
             $data['gambar'] = $request->file('gambar')->store('kendaraan', 'public');
@@ -39,27 +43,34 @@ class KendaraanController extends Controller
 
         Kendaraan::create($data);
 
-        return redirect()->route('kendaraan.index');
+        return redirect()
+            ->route('admin.kendaraan.index')
+            ->with('success', 'Kendaraan berhasil ditambahkan');
     }
 
-    // 🔴 INI YANG MEMBUAT FORM EDIT MUNCUL
-    public function edit(Kendaraan $kendaraan)
+    /**
+     * FORM EDIT
+     */
+    public function edit($id)
     {
-        $jenis = JenisKendaraan::all();
-        return view('admin.kendaraan.edit', compact('kendaraan', 'jenis'));
+        $kendaraan = Kendaraan::findOrFail($id);
+        return view('admin.kendaraan.edit', compact('kendaraan'));
     }
 
-    // 🔴 INI YANG MEMPERBAIKI ERROR $id
-    public function update(Request $request, Kendaraan $kendaraan)
+    /**
+     * UPDATE DATA
+     */
+    public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'nomor_polisi' => 'required',
-            'merk' => 'required',
-            'tahun' => 'required|integer',
-            'harga' => 'required|numeric',
-            'jenis_kendaraan_id' => 'required',
-            'gambar' => 'nullable|image',
+        $kendaraan = Kendaraan::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required',
+            'harga_sewa' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png'
         ]);
+
+        $data = $request->all();
 
         if ($request->hasFile('gambar')) {
             $data['gambar'] = $request->file('gambar')->store('kendaraan', 'public');
@@ -67,12 +78,20 @@ class KendaraanController extends Controller
 
         $kendaraan->update($data);
 
-        return redirect()->route('kendaraan.index');
+        return redirect()
+            ->route('admin.kendaraan.index')
+            ->with('success', 'Kendaraan berhasil diupdate');
     }
 
-    public function destroy(Kendaraan $kendaraan)
+    /**
+     * HAPUS DATA
+     */
+    public function destroy($id)
     {
-        $kendaraan->delete();
-        return redirect()->route('kendaraan.index');
+        Kendaraan::destroy($id);
+
+        return redirect()
+            ->route('admin.kendaraan.index')
+            ->with('success', 'Kendaraan berhasil dihapus');
     }
 }

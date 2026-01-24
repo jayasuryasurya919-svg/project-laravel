@@ -10,13 +10,22 @@
 
 <nav class="navbar navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('beranda') }}">Kendaraan Aset</a>
-        <a href="{{ route('kendaraan.index') }}" class="btn btn-outline-light btn-sm">Admin</a>
+        {{-- BRAND KE BERANDA ADMIN --}}
+        <a class="navbar-brand" href="{{ route('admin.beranda') }}">
+            Kendaraan Aset
+        </a>
+
+        <div>
+            {{-- KE DATA KENDARAAN --}}
+            <a href="{{ route('admin.kendaraan.index') }}" class="btn btn-outline-light btn-sm">
+                Admin
+            </a>
+        </div>
     </div>
 </nav>
 
 <div class="container">
-    {{-- INI WAJIB --}}
+    {{-- ISI HALAMAN --}}
     @yield('content')
 </div>
 
