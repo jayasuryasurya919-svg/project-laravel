@@ -1,45 +1,60 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\JenisKendaraanController;
 use App\Http\Controllers\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
-| WEB ROUTES
+| ROUTE USER
 |--------------------------------------------------------------------------
 */
-
-// ==================
-// HALAMAN UTAMA
-// ==================
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('welcome'); // USER
+})->name('home');
 
-// ==================
-// KENDARAAN (CRUD)
-// ==================
-Route::prefix('kendaraan')->group(function () {
-    Route::get('/', [KendaraanController::class, 'index'])->name('kendaraan.index');
-    Route::get('/create', [KendaraanController::class, 'create'])->name('kendaraan.create');
-    Route::post('/store', [KendaraanController::class, 'store'])->name('kendaraan.store');
-    Route::get('/edit/{id}', [KendaraanController::class, 'edit'])->name('kendaraan.edit');
-    Route::post('/update/{id}', [KendaraanController::class, 'update'])->name('kendaraan.update');
-    Route::get('/delete/{id}', [KendaraanController::class, 'destroy'])->name('kendaraan.delete');
-});
+/*
+|--------------------------------------------------------------------------
+| ROUTE ADMIN
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->group(function () {
 
-// ==================
-// TRANSAKSI
-// ==================
-Route::prefix('transaksi')->group(function () {
-    Route::get('/create', [TransaksiController::class, 'create'])->name('transaksi.create');
-    Route::post('/store', [TransaksiController::class, 'store'])->name('transaksi.store');
-});
+    // Beranda Admin
+    Route::get('/beranda', [BerandaController::class, 'index'])
+        ->name('admin.beranda');
 
-// ==================
-// FALLBACK (404)
-// ==================
-Route::fallback(function () {
-    abort(404);
+    // Kendaraan
+    Route::get('/kendaraan', [KendaraanController::class, 'index'])
+        ->name('admin.kendaraan.index');
+
+    Route::get('/kendaraan/create', [KendaraanController::class, 'create'])
+        ->name('admin.kendaraan.create');
+
+    Route::post('/kendaraan/store', [KendaraanController::class, 'store'])
+        ->name('admin.kendaraan.store');
+
+    Route::get('/kendaraan/edit/{id}', [KendaraanController::class, 'edit'])
+        ->name('admin.kendaraan.edit');
+
+    Route::post('/kendaraan/update/{id}', [KendaraanController::class, 'update'])
+        ->name('admin.kendaraan.update');
+
+    Route::get('/kendaraan/delete/{id}', [KendaraanController::class, 'destroy'])
+        ->name('admin.kendaraan.delete');
+
+    // Jenis Kendaraan
+    Route::resource('jenis-kendaraan', JenisKendaraanController::class);
+
+    // Transaksi
+    Route::get('/transaksi', [TransaksiController::class, 'index'])
+        ->name('admin.transaksi.index');
+
+    Route::get('/transaksi/create', [TransaksiController::class, 'create'])
+        ->name('admin.transaksi.create');
+
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])
+        ->name('admin.transaksi.store');
 });
