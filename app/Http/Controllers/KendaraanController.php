@@ -12,8 +12,8 @@ class KendaraanController extends Controller
      */
     public function index()
     {
-        $kendaraans = Kendaraan::latest()->get();
-        return view('admin.kendaraan.index', compact('kendaraans'));
+      $kendaraan = Kendaraan::all();
+    return view('admin.kendaraan.index', compact('kendaraan')); 
     }
 
     /**
