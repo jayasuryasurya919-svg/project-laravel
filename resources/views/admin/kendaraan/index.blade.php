@@ -1,52 +1,37 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container">
-    <h2>Data Kendaraan</h2>
+<h3>Data Kendaraan</h3>
 
-    <a href="{{ route('admin.kendaraan.create') }}" class="btn btn-primary mb-3">
-        Tambah Kendaraan
-    </a>
+<a href="{{ route('admin.kendaraan.create') }}">+ Tambah</a>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+@if(session('success'))
+    <p style="color:green">{{ session('success') }}</p>
+@endif
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Jenis</th>
-                <th>Plat</th>
-                <th>Harga Sewa</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($kendaraans as $k)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $k->nama_kendaraan }}</td>
-                <td>{{ $k->jenisKendaraan->nama }}</td>
-                <td>{{ $k->plat_nomor }}</td>
-                <td>{{ $k->harga_sewa }}</td>
-                <td>
-                    <a href="{{ route('admin.kendaraan.edit', $k->id) }}" class="btn btn-warning btn-sm">Edit</a>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Jenis</th>
+        <th>Harga</th>
+        <th>Aksi</th>
+    </tr>
 
-                    <form action="{{ route('admin.kendaraan.destroy', $k->id) }}"
-                          method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('Hapus data?')">
-                            Hapus
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+    @foreach($kendaraans as $k)
+    <tr>
+        <td>{{ $loop->iteration }}</td>
+        <td>{{ $k->nama }}</td>
+        <td>{{ $k->jenis }}</td>
+        <td>{{ $k->harga }}</td>
+        <td>
+            <form action="{{ route('admin.kendaraan.destroy', $k->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Hapus</button>
+            </form>
+        </td>
+    </tr>
+    @endforeach
+</table>
 @endsection

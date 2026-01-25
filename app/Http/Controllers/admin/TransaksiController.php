@@ -1,13 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
+    public function index()
+    {
+        $transaksis = Transaksi::with('kendaraan')->get();
+        return view('admin.transaksi.index', compact('transaksis'));
+    }
+
     public function create()
     {
         $kendaraans = Kendaraan::all();
@@ -19,25 +26,19 @@ class TransaksiController extends Controller
         $request->validate([
             'kendaraan_id' => 'required',
             'nama_peminjam' => 'required',
-            'tanggal' => 'required|date',
-            'lama_hari' => 'required|integer',
+            'lama_hari' => 'required|numeric'
         ]);
 
-        $kendaraan = Kendaraan::findOrFail($request->kendaraan_id);
-
-        $totalHarga = $kendaraan->harga_sewa * $request->lama_hari;
-
-        // FORMAT KE STRING
-        $totalHargaFormatted = number_format($totalHarga, 0, ',', '.');
+        $kendaraan = Kendaraan::find($request->kendaraan_id);
+        $total = $kendaraan->harga * $request->lama_hari;
 
         Transaksi::create([
             'kendaraan_id' => $request->kendaraan_id,
             'nama_peminjam' => $request->nama_peminjam,
-            'tanggal' => $request->tanggal,
             'lama_hari' => $request->lama_hari,
-            'total_harga' => $totalHargaFormatted, // STRING
+            'total_harga' => $total
         ]);
 
-        return redirect()->route('transaksi.create')->with('success', 'Transaksi berhasil disimpan');
+        return redirect()->route('admin.transaksi.index');
     }
 }

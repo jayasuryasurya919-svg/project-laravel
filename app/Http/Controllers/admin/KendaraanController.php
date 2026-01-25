@@ -9,107 +9,52 @@ use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
 {
-    /**
-     * Tampilkan daftar kendaraan
-     */
     public function index()
     {
-        $kendaraans = Kendaraan::with('jenisKendaraan')->get();
-        return view('admin.kendaraan.index', compact('kendaraans'));
+        return view('admin.kendaraan.index', [
+            'kendaraans' => Kendaraan::with('jenisKendaraan')->get()
+        ]);
     }
 
-    /**
-     * Tampilkan form tambah kendaraan
-     */
     public function create()
     {
-        $jenisKendaraans = JenisKendaraan::all();
-        return view('admin.kendaraan.create', compact('jenisKendaraans'));
+        return view('admin.kendaraan.create', [
+            'jenisKendaraans' => JenisKendaraan::all()
+        ]);
     }
 
-    /**
-     * Simpan data kendaraan baru
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kendaraan'       => 'required|string|max:255',
-            'jenis_kendaraan_id'   => 'required|exists:jenis_kendaraans,id',
-            'plat_nomor'           => 'required|string|max:20',
-            'harga_sewa'           => 'required|numeric',
-            'status'               => 'required|string'
+            'nama' => 'required',
+            'nomor_polisi' => 'required',
+            'jenis_kendaraan_id' => 'required',
+            'tahun' => 'required|numeric',
+            'harga' => 'required|numeric'
         ]);
 
-        Kendaraan::create([
-            'nama_kendaraan'     => $request->nama_kendaraan,
-            'jenis_kendaraan_id' => $request->jenis_kendaraan_id,
-            'plat_nomor'         => $request->plat_nomor,
-            'harga_sewa'         => $request->harga_sewa,
-            'status'             => $request->status,
-        ]);
+        Kendaraan::create($request->all());
 
-        return redirect()
-            ->route('admin.kendaraan.index')
-            ->with('success', 'Kendaraan berhasil ditambahkan');
+        return redirect()->route('admin.kendaraan.index');
     }
 
-    /**
-     * Tampilkan detail kendaraan
-     */
-    public function show($id)
-    {
-        $kendaraan = Kendaraan::with('jenisKendaraan')->findOrFail($id);
-        return view('admin.kendaraan.show', compact('kendaraan'));
-    }
-
-    /**
-     * Tampilkan form edit kendaraan
-     */
     public function edit($id)
     {
-        $kendaraan = Kendaraan::findOrFail($id);
-        $jenisKendaraans = JenisKendaraan::all();
-
-        return view('admin.kendaraan.edit', compact('kendaraan', 'jenisKendaraans'));
+        return view('admin.kendaraan.edit', [
+            'kendaraan' => Kendaraan::findOrFail($id),
+            'jenisKendaraans' => JenisKendaraan::all()
+        ]);
     }
 
-    /**
-     * Update data kendaraan
-     */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_kendaraan'       => 'required|string|max:255',
-            'jenis_kendaraan_id'   => 'required|exists:jenis_kendaraans,id',
-            'plat_nomor'           => 'required|string|max:20',
-            'harga_sewa'           => 'required|numeric',
-            'status'               => 'required|string'
-        ]);
-
-        $kendaraan = Kendaraan::findOrFail($id);
-        $kendaraan->update([
-            'nama_kendaraan'     => $request->nama_kendaraan,
-            'jenis_kendaraan_id' => $request->jenis_kendaraan_id,
-            'plat_nomor'         => $request->plat_nomor,
-            'harga_sewa'         => $request->harga_sewa,
-            'status'             => $request->status,
-        ]);
-
-        return redirect()
-            ->route('admin.kendaraan.index')
-            ->with('success', 'Kendaraan berhasil diperbarui');
+        Kendaraan::findOrFail($id)->update($request->all());
+        return redirect()->route('admin.kendaraan.index');
     }
 
-    /**
-     * Hapus kendaraan
-     */
     public function destroy($id)
     {
-        $kendaraan = Kendaraan::findOrFail($id);
-        $kendaraan->delete();
-
-        return redirect()
-            ->route('admin.kendaraan.index')
-            ->with('success', 'Kendaraan berhasil dihapus');
+        Kendaraan::findOrFail($id)->delete();
+        return back();
     }
 }

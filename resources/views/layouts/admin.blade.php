@@ -1,23 +1,14 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin - @yield('title')</title>
+    <title>Admin</title>
 </head>
 <body>
-
-<aside>
-    <h3>Admin Panel</h3>
-    <ul>
-        <li><a href="{{ route('admin.beranda') }}">Dashboard</a></li>
-        <li><a href="{{ route('admin.kendaraan.index') }}">Kendaraan</a></li>
-        <li><a href="{{ route('admin.transaksi.index') }}">Transaksi</a></li>
-    </ul>
-</aside>
-
-<section>
+    <h2>ADMIN PANEL</h2>
+    <a href="{{ route('admin.beranda') }}">Beranda</a> |
+    <a href="{{ route('admin.kendaraan.index') }}">Kendaraan</a> |
+    <a href="{{ route('admin.transaksi.index') }}">Transaksi</a>
+    <hr>
     @yield('content')
-</section>
-
 </body>
 </html>
