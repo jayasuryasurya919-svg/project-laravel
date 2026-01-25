@@ -13,17 +13,15 @@ class Kendaraan extends Model
 
     protected $table = 'kendaraans';
 
-    protected $fillable = [
-        'nomor_polisi',
-        'merk',
-        'tahun',
-        'harga',
-        'jenis_kendaraan_id',
-        'gambar',
-    ];
+  protected $fillable = [
+    'nama_kendaraan',
+    'jenis_kendaraan_id',
+    'plat_nomor',
+    'harga_sewa'
+];
 
-    public function jenis()
-    {
+public function jenisKendaraan()
+{
         return $this->belongsTo(JenisKendaraan::class, 'jenis_kendaraan_id');
     }
 

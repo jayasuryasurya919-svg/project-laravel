@@ -1,43 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kendaraan;
 use App\Models\JenisKendaraan;
 
 class KendaraanController extends Controller
 {
-    /**
-     * Tampilkan daftar kendaraan
-     */
     public function index()
     {
         $kendaraans = Kendaraan::with('jenisKendaraan')->get();
-
         return view('admin.kendaraan.index', compact('kendaraans'));
     }
 
-    /**
-     * Form tambah kendaraan
-     */
     public function create()
     {
         $jenisKendaraans = JenisKendaraan::all();
-
         return view('admin.kendaraan.create', compact('jenisKendaraans'));
     }
 
-    /**
-     * Simpan data kendaraan
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nama_kendaraan' => 'required',
             'jenis_kendaraan_id' => 'required',
             'plat_nomor' => 'required',
-            'harga_sewa' => 'required|numeric',
+            'harga_sewa' => 'required',
         ]);
 
         Kendaraan::create([
@@ -49,22 +39,9 @@ class KendaraanController extends Controller
 
         return redirect()
             ->route('admin.kendaraan.index')
-            ->with('success', 'Data kendaraan berhasil ditambahkan');
+            ->with('success', 'Kendaraan berhasil ditambahkan');
     }
 
-    /**
-     * Detail kendaraan
-     */
-    public function show($id)
-    {
-        $kendaraan = Kendaraan::with('jenisKendaraan')->findOrFail($id);
-
-        return view('admin.kendaraan.show', compact('kendaraan'));
-    }
-
-    /**
-     * Form edit kendaraan
-     */
     public function edit($id)
     {
         $kendaraan = Kendaraan::findOrFail($id);
@@ -73,35 +50,23 @@ class KendaraanController extends Controller
         return view('admin.kendaraan.edit', compact('kendaraan', 'jenisKendaraans'));
     }
 
-    /**
-     * Update kendaraan
-     */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_kendaraan' => 'required',
-            'jenis_kendaraan_id' => 'required',
-            'plat_nomor' => 'required',
-            'harga_sewa' => 'required|numeric',
-        ]);
-
         $kendaraan = Kendaraan::findOrFail($id);
+
         $kendaraan->update($request->all());
 
         return redirect()
             ->route('admin.kendaraan.index')
-            ->with('success', 'Data kendaraan berhasil diupdate');
+            ->with('success', 'Kendaraan berhasil diupdate');
     }
 
-    /**
-     * Hapus kendaraan
-     */
     public function destroy($id)
     {
         Kendaraan::destroy($id);
 
         return redirect()
             ->route('admin.kendaraan.index')
-            ->with('success', 'Data kendaraan berhasil dihapus');
+            ->with('success', 'Kendaraan berhasil dihapus');
     }
 }

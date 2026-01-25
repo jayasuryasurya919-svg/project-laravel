@@ -1,37 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tambah Transaksi</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h2>Tambah Transaksi</h2>
+@section('content')
+<div class="container">
+    <h3>Sewa Kendaraan</h3>
 
-@if(session('success'))
-    <p style="color:green">{{ session('success') }}</p>
-@endif
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Kendaraan:</strong> {{ $kendaraan->merk }}</p>
 
-<form action="{{ route('transaksi.store') }}" method="POST">
-    @csrf
+            <form action="{{ route('transaksi.store', $kendaraan->id) }}" method="POST">
+                @csrf
 
-    <label>Kendaraan</label><br>
-    <select name="kendaraan_id" required>
-        @foreach($kendaraans as $k)
-            <option value="{{ $k->id }}">{{ $k->nama }}</option>
-        @endforeach
-    </select><br><br>
+                <div class="mb-3">
+                    <label>Nama Peminjam</label>
+                    <input type="text" name="nama_peminjam" class="form-control" required>
+                </div>
 
-    <label>Nama Peminjam</label><br>
-    <input type="text" name="nama_peminjam" required><br><br>
+                <div class="mb-3">
+                    <label>Tanggal Sewa</label>
+                    <input type="date" name="tanggal" class="form-control" required>
+                </div>
 
-    <label>Tanggal</label><br>
-    <input type="date" name="tanggal" required><br><br>
+                <div class="mb-3">
+                    <label>Lama Sewa (hari)</label>
+                    <input type="number" name="lama_hari" class="form-control" required>
+                </div>
 
-    <label>Lama Hari</label><br>
-    <input type="number" name="lama_hari" required><br><br>
-
-    <button type="submit">Simpan</button>
-</form>
-
-</body>
-</html>
+                <button class="btn btn-success">Sewa Sekarang</button>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
