@@ -6,8 +6,9 @@
         <div class="card-body">
             <h4 class="mb-4">Tambah Kendaraan</h4>
 
-            <form action="{{ route('kendaraan.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+           <form action="{{ route('admin.kendaraan.store') }}" method="POST">
+           @csrf
+
 
                 {{-- Nomor Polisi --}}
                 <div class="mb-3">

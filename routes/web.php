@@ -26,7 +26,8 @@ Route::get('/', function () {
 | ROUTE ADMIN
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('kendaraan', KendaraanController::class);
 
     // Beranda Admin
     Route::get('/beranda', [BerandaController::class, 'index'])
