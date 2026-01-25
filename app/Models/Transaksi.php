@@ -1,28 +1,48 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers\Admin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Controller;
+use App\Models\Transaksi;
+use App\Models\Kendaraan;
+use Illuminate\Http\Request;
 
-class Transaksi extends Model
+class TransaksiController extends Controller
 {
-    use HasFactory;
-
-    protected $table = 'transaksis';
-
-    protected $fillable = [
-       'kendaraan_id',
-    'nama_peminjam',
-    'tanggal',
-    'lama_hari',
-    'total_harga',
-    'keterangan',
-    'tanggal_kembali',
-    ];
-
-    public function kendaraan()
+    public function index()
     {
-        return $this->belongsTo(Kendaraan::class);
+        $transaksis = Transaksi::with('kendaraan')->get();
+        return view('admin.transaksi.index', compact('transaksis'));
+    }
+
+    public function create()
+    {
+        $kendaraans = Kendaraan::all();
+        return view('admin.transaksi.create', compact('kendaraans'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kendaraan_id' => 'required|exists:kendaraans,id',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'total_harga' => 'required|numeric',
+        ]);
+
+        Transaksi::create($request->all());
+
+        return redirect()
+            ->route('admin.transaksi.index')
+            ->with('success', 'Transaksi berhasil ditambahkan');
+    }
+
+    public function destroy($id)
+    {
+        Transaksi::findOrFail($id)->delete();
+
+        return redirect()
+            ->route('admin.transaksi.index')
+            ->with('success', 'Transaksi berhasil dihapus');
     }
 }

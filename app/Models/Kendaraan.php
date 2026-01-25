@@ -14,10 +14,11 @@ class Kendaraan extends Model
     protected $table = 'kendaraans';
 
   protected $fillable = [
-    'nama_kendaraan',
+   'nama_kendaraan',
     'jenis_kendaraan_id',
     'plat_nomor',
-    'harga_sewa'
+    'harga_sewa',
+    'status'
 ];
 
 public function jenisKendaraan()
