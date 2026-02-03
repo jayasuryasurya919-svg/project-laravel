@@ -3,23 +3,40 @@
 @section('title', 'Tambah Jenis Kendaraan')
 
 @section('content')
-<div class="max-w-xl bg-white p-6 rounded-xl shadow">
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h5 class="mb-0">Tambah Jenis Kendaraan</h5>
+        <small class="text-muted">Buat kategori kendaraan baru</small>
+    </div>
+    <a href="{{ route('admin.jenis-kendaraan.index') }}" class="btn btn-outline-secondary">
+        Kembali
+    </a>
+</div>
 
-    <h2 class="text-lg font-semibold mb-4">➕ Tambah Jenis Kendaraan</h2>
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    <form method="POST" action="{{ route('admin.jenis-kendaraan.store') }}">
-        @csrf
+        <form method="POST" action="{{ route('admin.jenis-kendaraan.store') }}">
+            @csrf
 
-        <label class="text-sm">Nama Jenis</label>
-        <input type="text" name="nama"
-               class="w-full border rounded px-3 py-2 mt-1">
+            <div class="mb-3">
+                <label class="form-label">Nama Jenis</label>
+                <input type="text" name="nama" class="form-control" value="{{ old('nama') }}">
+            </div>
 
-        <div class="mt-4 flex justify-end">
-            <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">
-                Simpan
+            <button class="btn btn-primary">
+                <i class="bi bi-save me-1"></i>Simpan
             </button>
-        </div>
-    </form>
-
+        </form>
+    </div>
 </div>
 @endsection

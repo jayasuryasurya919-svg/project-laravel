@@ -14,7 +14,7 @@ class TransaksiUserController extends Controller
             ->with('kendaraan')
             ->orderByDesc('tanggal')
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
 
         return view('user.transaksi', compact('transaksis'));
     }

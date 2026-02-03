@@ -33,7 +33,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         @if($k->gambar)
-                            <img src="{{ asset($k->gambar) }}" width="80" class="rounded border">
+                            <img src="{{ asset($k->gambar) }}" width="80" class="rounded border" onerror="this.onerror=null;this.src='{{ asset('no-image.svg') }}';">
                         @else
                             <span class="text-muted small">-</span>
                         @endif
@@ -64,5 +64,9 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mt-3">
+    {{ $kendaraans->links() }}
 </div>
 @endsection

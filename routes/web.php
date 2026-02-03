@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
             'admin_password' => ['required','string'],
         ]);
 
-        if ($request->input('admin_password') !== env('ADMIN_PANEL_PASSWORD')) {
+        if ($request->input('admin_password') !== config('admin.panel_password')) {
             return back()->withErrors([
                 'admin_password' => 'Password admin salah.',
             ])->onlyInput('admin_password');
@@ -93,7 +93,7 @@ Route::prefix('admin')
         Route::resource('jenis-kendaraan', JenisKendaraanController::class);
 
         Route::resource('transaksi', TransaksiController::class)
-            ->only(['index','create','store']);
+            ->only(['index','create','store','edit','update','destroy']);
 });
 
 
