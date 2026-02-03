@@ -9,9 +9,9 @@ class Kendaraan extends Model
     protected $fillable = [
         'nama',
         'nomor_polisi',
-        'jenis_kendaraan_id',
-        'tahun',
         'harga',
+        'tahun',
+        'jenis_kendaraan_id',
         'gambar'
     ];
 

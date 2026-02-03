@@ -1,41 +1,76 @@
-=<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Beranda</title>
-</head>
-<body>
+@extends('layouts.admin')
+@section('title','Beranda')
 
-<h1>ADMIN PANEL</h1>
+@section('content')
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-primary-subtle text-primary p-3">
+                    <i class="bi bi-car-front fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Total Kendaraan</div>
+                    <div class="fs-3 fw-semibold">{{ $totalKendaraan }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-success-subtle text-success p-3">
+                    <i class="bi bi-tags fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Jenis Kendaraan</div>
+                    <div class="fs-3 fw-semibold">{{ $totalJenis }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-warning-subtle text-warning p-3">
+                    <i class="bi bi-cash-coin fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Total Transaksi</div>
+                    <div class="fs-3 fw-semibold">{{ $totalTransaksi }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<nav>
-    <a href="{{ route('admin.beranda') }}">Beranda</a> |
-    <a href="{{ route('admin.kendaraan.index') }}">Kendaraan</a> |
-    <a href="{{ route('admin.transaksi.index') }}">Transaksi</a>
-</nav>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h5 class="mb-0">5 Kendaraan Terbaru</h5>
+    <a href="{{ route('admin.kendaraan.index') }}" class="btn btn-sm btn-outline-primary">
+        Lihat Semua
+    </a>
+</div>
 
-<hr>
-
-<h3>Total Kendaraan: {{ $totalKendaraan }}</h3>
-
-<h4>5 Kendaraan Terbaru</h4>
-
-<table border="1" cellpadding="5">
-    <tr>
-        <th>Nama</th>
-        <th>Nomor Polisi</th>
-        <th>Tahun</th>
-        <th>Harga</th>
-    </tr>
-
-    @foreach ($kendaraans as $kendaraan)
-    <tr>
-        <td>{{ $kendaraan->nama }}</td>
-        <td>{{ $kendaraan->nomor_polisi }}</td>
-        <td>{{ $kendaraan->tahun }}</td>
-        <td>{{ $kendaraan->harga }}</td>
-    </tr>
-    @endforeach
-</table>
-
-</body>
-</html>
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Jenis</th>
+                    <th>Harga</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($kendaraans as $k)
+                <tr>
+                    <td>{{ $k->nama }}</td>
+                    <td>{{ optional($k->jenisKendaraan)->nama ?? '-' }}</td>
+                    <td>Rp {{ number_format($k->harga) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection

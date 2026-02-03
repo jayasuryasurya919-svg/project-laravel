@@ -9,7 +9,7 @@ class BerandaController extends Controller
 {
     public function index()
     {
-        $kendaraans = Kendaraan::all();
+        $kendaraans = Kendaraan::with('jenisKendaraan')->get();
         return view('user.beranda', compact('kendaraans'));
     }
 }

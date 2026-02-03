@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>User - @yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @include('partials.head')
+    <style>
+        .user-nav {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+        }
+        .user-nav .btn {
+            border-color: rgba(255,255,255,0.25);
+        }
+        .user-shell {
+            padding-top: 16px;
+            padding-bottom: 24px;
+        }
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-dark user-nav">
+    <div class="container">
+        <a class="navbar-brand" href="{{ route('user.beranda') }}">Rental Kendaraan</a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('user.beranda') }}" class="btn btn-outline-light btn-sm">Beranda</a>
+            @auth
+                <a href="{{ route('user.transaksi.index') }}" class="btn btn-outline-light btn-sm">Transaksi Saya</a>
+                <a href="{{ route('admin.beranda') }}" class="btn btn-outline-light btn-sm">Admin Panel</a>
+            @endauth
+        </div>
+    </div>
+</nav>
 
-<header>
-    <h2>Website Kendaraan</h2>
-    <nav>
-        <a href="/">Beranda</a>
-        <a href="/admin">Admin</a>
-    </nav>
-</header>
-
-<main>
+<div class="container user-shell">
     @yield('content')
-</main>
+</div>
 
-<footer>
-    <p>© {{ date('Y') }} User</p>
-</footer>
-
+@include('partials.script')
 </body>
 </html>

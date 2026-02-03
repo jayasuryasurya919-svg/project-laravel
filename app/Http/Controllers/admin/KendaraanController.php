@@ -3,24 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Kendaraan;
 use App\Models\JenisKendaraan;
-use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
 {
     public function index()
     {
-        return view('admin.kendaraan.index', [
-            'kendaraans' => Kendaraan::with('jenisKendaraan')->get()
-        ]);
+        $kendaraans = Kendaraan::with('jenisKendaraan')->get();
+        return view('admin.kendaraan.index', compact('kendaraans'));
     }
 
     public function create()
     {
-        return view('admin.kendaraan.create', [
-            'jenisKendaraans' => JenisKendaraan::all()
-        ]);
+        $jenisKendaraans = JenisKendaraan::all();
+        return view('admin.kendaraan.create', compact('jenisKendaraans'));
     }
 
     public function store(Request $request)
@@ -28,33 +26,39 @@ class KendaraanController extends Controller
         $request->validate([
             'nama' => 'required',
             'nomor_polisi' => 'required',
-            'jenis_kendaraan_id' => 'required',
+            'harga' => 'required|numeric',
             'tahun' => 'required|numeric',
-            'harga' => 'required|numeric'
+            'jenis_kendaraan_id' => 'required',
+            'gambar' => 'nullable|image'
         ]);
 
-        Kendaraan::create($request->all());
+        $gambar = null;
+
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $namaFile = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('kendaraan'), $namaFile);
+            $gambar = 'kendaraan/'.$namaFile;
+        }
+
+        Kendaraan::create([
+            'nama' => $request->nama,
+            'nomor_polisi' => $request->nomor_polisi,
+            'harga' => $request->harga,
+            'tahun' => $request->tahun,
+            'jenis_kendaraan_id' => $request->jenis_kendaraan_id,
+            'gambar' => $gambar,
+        ]);
 
         return redirect()->route('admin.kendaraan.index');
     }
-
-    public function edit($id)
+      // 🔥 INI YANG KURANG
+    public function destroy(Kendaraan $kendaraans)
     {
-        return view('admin.kendaraan.edit', [
-            'kendaraan' => Kendaraan::findOrFail($id),
-            'jenisKendaraans' => JenisKendaraan::all()
-        ]);
-    }
+        $kendaraans->delete();
 
-    public function update(Request $request, $id)
-    {
-        Kendaraan::findOrFail($id)->update($request->all());
-        return redirect()->route('admin.kendaraan.index');
-    }
-
-    public function destroy($id)
-    {
-        Kendaraan::findOrFail($id)->delete();
-        return back();
+        return redirect()
+            ->route('admin.kendaraan.index')
+            ->with('success', 'Kendaraan berhasil dihapus');
     }
 }
